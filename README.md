@@ -73,7 +73,7 @@
 <!-- tech-stack:end -->
 
 <!--
-The GitHub Action updates the section between the markers from public repositories.
-Python is intentionally always included. Detected tools are evidence of repository
-usage, not a claim that every dependency is a personal skill.
+The GitHub Action scans public repositories and combines the results with a curated
+package list from private projects. Python is intentionally always included. These
+badges reflect project usage, not a claim that every dependency is a personal skill.
 -->
