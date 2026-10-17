@@ -14,6 +14,7 @@ Web tools, data pipelines, and AI experiments are some of the things you'll find
 ![Python](https://img.shields.io/badge/Python-343B30?style=flat&logo=python&logoColor=D8C7A0)
 ![Go](https://img.shields.io/badge/Go-343B30?style=flat&logo=go&logoColor=D8C7A0)
 ![JavaScript](https://img.shields.io/badge/JavaScript-343B30?style=flat&logo=javascript&logoColor=D8C7A0)
+![Liquid](https://img.shields.io/badge/Liquid-343B30?style=flat)
 ![Next.js](https://img.shields.io/badge/Next.js-343B30?style=flat&logo=nextdotjs&logoColor=D8C7A0)
 ![React](https://img.shields.io/badge/React-343B30?style=flat&logo=react&logoColor=D8C7A0)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-343B30?style=flat&logo=tailwindcss&logoColor=D8C7A0)
@@ -45,6 +46,7 @@ Web tools, data pipelines, and AI experiments are some of the things you'll find
 ![Oracle Database](https://img.shields.io/badge/Oracle%20Database-343B30?style=flat&logo=oracle&logoColor=D8C7A0)
 ![Telegram Bot API](https://img.shields.io/badge/Telegram%20Bot%20API-343B30?style=flat&logo=telegram&logoColor=D8C7A0)
 ![Vercel](https://img.shields.io/badge/Vercel-343B30?style=flat&logo=vercel&logoColor=D8C7A0)
+![Shopify](https://img.shields.io/badge/Shopify-343B30?style=flat&logo=shopify&logoColor=D8C7A0)
 
 **Application libraries**
 
@@ -107,7 +109,9 @@ Web tools, data pipelines, and AI experiments are some of the things you'll find
 
 <!--
 The GitHub Action scans public repositories and combines the results with a curated
-package list from private projects. Python is intentionally always included. These
-badges reflect project usage, not a claim that every dependency is a personal skill.
+package list from private projects. Python and Liquid are always included;
+Shopify is included because you use it. These badges reflect project usage, not
+a claim that every dependency is a personal skill.
 -->
+
 

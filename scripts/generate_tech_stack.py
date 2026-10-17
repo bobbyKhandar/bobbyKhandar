@@ -81,6 +81,7 @@ PACKAGE_LOGOS = {
     "@heroicons/react": ("Heroicons", "heroicons", "8B5CF6"),
     "@tailwindcss/forms": ("Tailwind CSS", "tailwindcss", "06B6D4"),
     "@vercel/postgres": ("Vercel", "vercel", "000000"),
+    "shopify": ("Shopify", "shopify", "7AB55C"),
     "next-auth": ("Auth.js", "auth0", "000000"),
     "lucide-react": ("Lucide", "lucide", "F56565"),
     "recharts": ("Recharts", "", "22B5BF"),
@@ -156,6 +157,7 @@ LANGUAGE_LOGOS = {
     "javascript": ("JavaScript", "javascript", "F7DF1E"),
     "typescript": ("TypeScript", "typescript", "3178C6"),
     "html": ("HTML", "html5", "E34F26"),
+    "liquid": ("Liquid", "", "95BF47"),
     "css": ("CSS", "css3", "1572B6"),
     "java": ("Java", "openjdk", "437291"),
     "c++": ("C++", "cplusplus", "00599C"),
@@ -172,9 +174,9 @@ LANGUAGE_LOGOS = {
 }
 
 
-# Important direct dependencies found in private repository manifests. The
-# scheduled workflow cannot fetch private repos with its repository-scoped token.
-PRIVATE_PACKAGE_SEEDS = {
+# Curated packages from private manifests and profile platforms the user named.
+# The scheduled workflow cannot fetch private repos with its repository-scoped token.
+PROFILE_PACKAGE_SEEDS = {
     "@tanstack/react-query",
     "@tanstack/react-table",
     "convex",
@@ -210,6 +212,7 @@ PRIVATE_PACKAGE_SEEDS = {
     "olefile",
     "striprtf",
     "werkzeug",
+    "shopify",
 }
 
 
@@ -224,7 +227,7 @@ PACKAGE_RELEVANCE_GROUPS = (
      "LanceDB", "OpenCV", "EasyOCR", "Pydantic", "HDBSCAN", "Apache Arrow",
      "Delta Lake"),
     ("AWS", "MongoDB", "Mongoose", "Oracle Database", "Redis", "Prisma",
-     "SQLAlchemy", "Convex", "Vercel", "Clerk", "Auth.js", "Telegram Bot API"),
+     "SQLAlchemy", "Convex", "Vercel", "Clerk", "Auth.js", "Telegram Bot API", "Shopify"),
     ("TanStack", "React Router", "React Hook Form", "Zod", "SWR", "Axios",
      "Requests", "Recharts", "Radix UI", "APScheduler"),
     ("Vite", "Webpack", "pytest"),
@@ -377,8 +380,9 @@ def collect(username: str, token: str | None) -> tuple[Counter, Counter]:
             if content is not None:
                 package_repos.update(packages_from_manifest(path, content))
         time.sleep(0.15)
-    package_repos.update(PRIVATE_PACKAGE_SEEDS)
+    package_repos.update(PROFILE_PACKAGE_SEEDS)
     languages["Python"] = max(languages["Python"], 1)
+    languages["Liquid"] = max(languages["Liquid"], 1)
     return languages, package_repos
 
 
@@ -398,10 +402,11 @@ def render(languages: Counter, package_repos: Counter) -> str:
             languages.items(), key=lambda item: (-item[1], item[0].casefold())
         )
         if name.casefold() in LANGUAGE_LOGOS
-        and (count / total >= 0.01 or name.casefold() == "python")
+        and (count / total >= 0.01 or name.casefold() in {"python", "liquid"})
     ][:12]
-    if not any(name.casefold() == "python" for name in selected_languages):
-        selected_languages.append("Python")
+    for required_language in ("Python", "Liquid"):
+        if not any(name.casefold() == required_language.casefold() for name in selected_languages):
+            selected_languages.append(required_language)
 
     badges: list[str] = []
     seen = set()
@@ -504,7 +509,7 @@ def main() -> int:
     if updated != original:
         with open(README, "w", encoding="utf-8") as file:
             file.write(updated)
-    print(f"Updated tech stack from public repositories for {username} (Python is always included).")
+    print(f"Updated tech stack from public repositories for {username} (Python and Liquid are always included).")
     return 0
 
 
