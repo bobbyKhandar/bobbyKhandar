@@ -212,6 +212,36 @@ PRIVATE_PACKAGE_SEEDS = {
     "werkzeug",
 }
 
+
+# Relevance for a profile: foundational frameworks, specialist AI/data tools,
+# backend services, application libraries, build tools, document tools, then
+# interface and low-level helpers. Usage frequency orders badges within a group.
+PACKAGE_RELEVANCE_GROUPS = (
+    ("React", "Next.js", "Vue", "Angular", "Svelte", "Express", "FastAPI",
+     "Django", "Flask", "Tailwind CSS", "Bootstrap"),
+    ("LangChain", "OpenAI", "Google AI", "pandas", "NumPy", "PyTorch",
+     "TensorFlow", "scikit-learn", "Keras", "Sentence Transformers", "Qdrant",
+     "LanceDB", "OpenCV", "EasyOCR", "Pydantic", "HDBSCAN", "Apache Arrow",
+     "Delta Lake"),
+    ("AWS", "MongoDB", "Mongoose", "Oracle Database", "Redis", "Prisma",
+     "SQLAlchemy", "Convex", "Vercel", "Clerk", "Auth.js", "Telegram Bot API"),
+    ("TanStack", "React Router", "React Hook Form", "Zod", "SWR", "Axios",
+     "Requests", "Recharts", "Radix UI", "APScheduler"),
+    ("Vite", "Webpack", "pytest"),
+    ("PyMuPDF", "PyPDF", "pdfplumber", "openpyxl", "python-docx", "PDF-lib",
+     "PDF2Image", "Pillow", "fastavro", "JSZip", "PyYAML", "JSON5"),
+    ("Lucide", "Heroicons", "Embla Carousel", "Sonner", "Vaul",
+     "React Day Picker", "Resizable Panels", "Input OTP"),
+    ("Tailwind Merge", "Class Variance Authority", "clsx", "dotenv",
+     "python-dotenv", "cmdk", "date-fns", "sqlparse", "xlrd", "odfpy",
+     "olefile", "striprtf"),
+)
+PACKAGE_RELEVANCE = {
+    label.casefold(): rank
+    for rank, group in enumerate(PACKAGE_RELEVANCE_GROUPS)
+    for label in group
+}
+
 MANIFEST_NAMES = {
     "package.json", "requirements.txt", "requirements-dev.txt",
     "pyproject.toml", "Pipfile", "Cargo.toml", "go.mod",
@@ -360,10 +390,12 @@ def badge(label: str, logo: str, color: str) -> str:
 
 
 def render(languages: Counter, package_repos: Counter) -> str:
-    # Ignore tiny language fragments, then show up to 12 languages by code volume.
+    # Keep languages first, ordered by code volume, with deterministic ties.
     total = sum(languages.values()) or 1
     selected_languages = [
-        name for name, count in languages.most_common()
+        name for name, count in sorted(
+            languages.items(), key=lambda item: (-item[1], item[0].casefold())
+        )
         if name.casefold() in LANGUAGE_LOGOS
         and (count / total >= 0.01 or name.casefold() == "python")
     ][:12]
@@ -373,34 +405,49 @@ def render(languages: Counter, package_repos: Counter) -> str:
     badges: list[str] = []
     seen = set()
     for name in selected_languages:
-        key = name.casefold()
-        label, logo, color = LANGUAGE_LOGOS[key]
+        label, logo, color = LANGUAGE_LOGOS[name.casefold()]
         if label.casefold() not in seen:
             badges.append(badge(label, logo, color))
             seen.add(label.casefold())
 
-    selected_packages = [
-        key for key, count in package_repos.most_common()
-        if key in PACKAGE_LOGOS and count >= 1
-    ]
-    for key in selected_packages:
+    # Merge aliases into one display badge. The most-used alias supplies its
+    # frequency; summing aliases would inflate bundled or related packages.
+    candidates: dict[str, tuple[str, str, str, int]] = {}
+    for key, count in package_repos.items():
+        if key not in PACKAGE_LOGOS or count < 1:
+            continue
         label, logo, color = PACKAGE_LOGOS[key]
+        identity = label.casefold()
+        previous = candidates.get(identity)
+        if previous is None or count > previous[3]:
+            candidates[identity] = (label, logo, color, count)
+
+    # Keep recurring packages without known logos, after excluding config noise.
+    excluded = {"typescript", "globals", "postcss", "autoprefixer"}
+    generic = sorted(
+        (
+            (key, count) for key, count in package_repos.items()
+            if key not in PACKAGE_LOGOS and count >= 2
+            and not key.startswith(("@types/", "eslint", "prettier"))
+            and key not in excluded
+        ),
+        key=lambda item: (-item[1], item[0]),
+    )[:20]
+    for key, count in generic:
+        label = key.rsplit("/", 1)[-1].replace("-", " ").replace("_", " ").title()
+        candidates.setdefault(label.casefold(), (label, "", "64748B", count))
+
+    ordered_packages = sorted(
+        candidates.values(),
+        key=lambda item: (
+            PACKAGE_RELEVANCE.get(item[0].casefold(), len(PACKAGE_RELEVANCE_GROUPS)),
+            -item[3],
+            item[0].casefold(),
+        ),
+    )
+    for label, logo, color, _count in ordered_packages:
         if label.casefold() not in seen:
             badges.append(badge(label, logo, color))
-            seen.add(label.casefold())
-
-    # Include other recurring direct dependencies as readable badges too. This
-    # avoids silently dropping useful packages just because we lack a logo slug.
-    excluded = {"typescript", "globals", "postcss", "autoprefixer"}
-    generic = [
-        (key, count) for key, count in package_repos.most_common()
-        if key not in PACKAGE_LOGOS and count >= 2
-        and not key.startswith(("@types/", "eslint", "prettier")) and key not in excluded
-    ][:20]
-    for key, _count in generic:
-        label = key.rsplit("/", 1)[-1].replace("-", " ").replace("_", " ").title()
-        if label.casefold() not in seen:
-            badges.append(badge(label, "", "64748B"))
             seen.add(label.casefold())
     return "\n".join(badges)
 
