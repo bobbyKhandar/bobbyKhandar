@@ -1,16 +1,13 @@
-## Hi there 👋
+# Hi, I'm Bobby 👋
+
+## Tech I use
+
+<!-- tech-stack:start -->
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+<!-- tech-stack:end -->
 
 <!--
-**bobbyKhandar/bobbyKhandar** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
-Here are some ideas to get you started:
-
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
+The GitHub Action updates the section between the markers from public repositories.
+Python is intentionally always included. Detected tools are evidence of repository
+usage, not a claim that every dependency is a personal skill.
 -->
