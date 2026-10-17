@@ -317,11 +317,11 @@ def render(languages: Counter, package_repos: Counter) -> str:
 
     # Include other recurring direct dependencies as readable badges too. This
     # avoids silently dropping useful packages just because we lack a logo slug.
-    excluded = {"typescript", "eslint", "prettier", "globals", "postcss", "autoprefixer"}
+    excluded = {"typescript", "globals", "postcss", "autoprefixer"}
     generic = [
         (key, count) for key, count in package_repos.most_common()
         if key not in PACKAGE_LOGOS and count >= 2
-        and not key.startswith("@types/") and key not in excluded
+        and not key.startswith(("@types/", "eslint", "prettier")) and key not in excluded
     ][:20]
     for key, _count in generic:
         label = key.rsplit("/", 1)[-1].replace("-", " ").replace("_", " ").title()
