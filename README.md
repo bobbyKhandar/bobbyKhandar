@@ -10,7 +10,6 @@ Web tools, data pipelines, and AI experiments are some of the things you'll find
 ### Things I reach for
 
 <!-- tech-stack:start -->
-
 ![TypeScript](https://img.shields.io/badge/TypeScript-343B30?style=flat&logo=typescript&logoColor=D8C7A0)
 ![Python](https://img.shields.io/badge/Python-343B30?style=flat&logo=python&logoColor=D8C7A0)
 ![Go](https://img.shields.io/badge/Go-343B30?style=flat&logo=go&logoColor=D8C7A0)
