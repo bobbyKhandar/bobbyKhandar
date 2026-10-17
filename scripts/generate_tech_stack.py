@@ -117,6 +117,38 @@ PACKAGE_LOGOS = {
     "tailwind-merge": ("Tailwind Merge", "tailwindcss", "06B6D4"),
     "pdf-lib": ("PDF-lib", "", "B30B00"),
     "zod-mongoose": ("Zod", "", "3E67B1"),
+    "@tanstack/react-query": ("TanStack", "", "FF4154"),
+    "@tanstack/react-table": ("TanStack", "", "FF4154"),
+    "convex": ("Convex", "", "EE342F"),
+    "react-hook-form": ("React Hook Form", "", "EC5990"),
+    "@hookform/resolvers": ("React Hook Form", "", "EC5990"),
+    "swr": ("SWR", "", "000000"),
+    "cmdk": ("cmdk", "", "64748B"),
+    "date-fns": ("date-fns", "", "64748B"),
+    "embla-carousel-react": ("Embla Carousel", "", "64748B"),
+    "input-otp": ("Input OTP", "", "64748B"),
+    "react-day-picker": ("React Day Picker", "", "64748B"),
+    "react-resizable-panels": ("Resizable Panels", "", "64748B"),
+    "react-router-dom": ("React Router", "reactrouter", "CA4245"),
+    "sonner": ("Sonner", "", "64748B"),
+    "vaul": ("Vaul", "", "64748B"),
+    "tailwindcss-animate": ("Tailwind CSS", "tailwindcss", "06B6D4"),
+    "next-themes": ("Next.js", "nextdotjs", "000000"),
+    "openpyxl": ("openpyxl", "", "217346"),
+    "oracledb": ("Oracle Database", "oracle", "F80000"),
+    "apscheduler": ("APScheduler", "", "64748B"),
+    "fastavro": ("fastavro", "", "64748B"),
+    "deltalake": ("Delta Lake", "", "E07000"),
+    "pymongo": ("MongoDB", "mongodb", "47A248"),
+    "sqlparse": ("sqlparse", "", "64748B"),
+    "pdfplumber": ("pdfplumber", "", "64748B"),
+    "python-docx": ("python-docx", "python", "3776AB"),
+    "xlrd": ("xlrd", "", "64748B"),
+    "odfpy": ("odfpy", "", "64748B"),
+    "olefile": ("olefile", "", "64748B"),
+    "striprtf": ("striprtf", "", "64748B"),
+    "werkzeug": ("Flask", "flask", "000000"),
+
 }
 
 LANGUAGE_LOGOS = {
@@ -137,6 +169,47 @@ LANGUAGE_LOGOS = {
     "swift": ("Swift", "swift", "F05138"),
     "shell": ("Shell", "gnubash", "4EAA25"),
     "r": ("R", "r", "276DC3"),
+}
+
+
+# Important direct dependencies found in private repository manifests. The
+# scheduled workflow cannot fetch private repos with its repository-scoped token.
+PRIVATE_PACKAGE_SEEDS = {
+    "@tanstack/react-query",
+    "@tanstack/react-table",
+    "convex",
+    "react-hook-form",
+    "@hookform/resolvers",
+    "swr",
+    "cmdk",
+    "date-fns",
+    "embla-carousel-react",
+    "input-otp",
+    "react-day-picker",
+    "react-resizable-panels",
+    "react-router-dom",
+    "sonner",
+    "vaul",
+    "tailwindcss-animate",
+    "next-themes",
+    "flask",
+    "pandas",
+    "openpyxl",
+    "oracledb",
+    "apscheduler",
+    "pyarrow",
+    "fastavro",
+    "deltalake",
+    "pymongo",
+    "sqlparse",
+    "pdfplumber",
+    "pypdf",
+    "python-docx",
+    "xlrd",
+    "odfpy",
+    "olefile",
+    "striprtf",
+    "werkzeug",
 }
 
 MANIFEST_NAMES = {
@@ -274,6 +347,7 @@ def collect(username: str, token: str | None) -> tuple[Counter, Counter]:
             if content is not None:
                 package_repos.update(packages_from_manifest(path, content))
         time.sleep(0.15)
+    package_repos.update(PRIVATE_PACKAGE_SEEDS)
     languages["Python"] = max(languages["Python"], 1)
     return languages, package_repos
 
