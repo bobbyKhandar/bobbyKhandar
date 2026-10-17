@@ -382,10 +382,11 @@ def collect(username: str, token: str | None) -> tuple[Counter, Counter]:
     return languages, package_repos
 
 
-def badge(label: str, logo: str, color: str) -> str:
-    label = urllib.parse.quote(label, safe="")
-    logo_suffix = f"&logo={urllib.parse.quote(logo)}&logoColor=white" if logo else ""
-    url = f"https://img.shields.io/badge/{label}-{color}?style=for-the-badge{logo_suffix}"
+def badge(label: str, logo: str, _brand_color: str) -> str:
+    # A muted olive and parchment palette matches the profile artwork.
+    encoded_label = urllib.parse.quote(label, safe="")
+    logo_suffix = f"&logo={urllib.parse.quote(logo)}&logoColor=D8C7A0" if logo else ""
+    url = f"https://img.shields.io/badge/{encoded_label}-343B30?style=flat{logo_suffix}"
     return f"![{label}]({url})"
 
 
@@ -445,11 +446,40 @@ def render(languages: Counter, package_repos: Counter) -> str:
             item[0].casefold(),
         ),
     )
+    # Keep the main stack visible and the longer library inventory expandable.
+    section_names = {
+        1: "AI & data",
+        2: "Backends & services",
+        3: "Application libraries",
+        4: "Build & testing",
+        5: "Documents & formats",
+        6: "Interface libraries",
+        7: "Small utilities",
+    }
+    more: dict[int, list[str]] = {}
     for label, logo, color, _count in ordered_packages:
-        if label.casefold() not in seen:
+        identity = label.casefold()
+        if identity in seen:
+            continue
+        rank = PACKAGE_RELEVANCE.get(identity, len(PACKAGE_RELEVANCE_GROUPS))
+        if rank == 0:
             badges.append(badge(label, logo, color))
-            seen.add(label.casefold())
-    return "\n".join(badges)
+        else:
+            more.setdefault(rank, []).append(badge(label, logo, color))
+        seen.add(identity)
+    visible = "\n".join(badges)
+    if not more:
+        return visible
+    sections = [
+        f"**{section_names.get(rank, 'Other libraries')}**\n\n" + "\n".join(items)
+        for rank, items in sorted(more.items())
+    ]
+    details = (
+        "<details>\n<summary>More libraries & tools</summary>\n\n"
+        + "\n\n".join(sections)
+        + "\n\n</details>"
+    )
+    return visible + "\n\n" + details
 
 
 def update_readme(content: str, generated: str) -> str:

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="290" viewBox="0 0 1200 290" role="img" aria-labelledby="title desc">
+  <title id="title">Bobby M Khandar</title>
+  <desc id="desc">A quiet olive and parchment header with a classical arch. Still learning, always will be.</desc>
+  <rect width="1200" height="290" rx="10" fill="#171e19"/>
+  <rect x="13" y="13" width="1174" height="264" rx="5" fill="none" stroke="#4a5242"/>
+  <g font-family="Georgia, 'Times New Roman', serif">
+    <text x="55" y="75" font-size="15" letter-spacing="4" fill="#c5b68f">A WORK IN PROGRESS</text>
+    <text x="52" y="149" font-size="62" fill="#f0e9d9">Bobby M Khandar</text>
+    <text x="56" y="202" font-size="25" font-style="italic" fill="#c5b68f">Still learning, always will be.</text>
+  </g>
+  <path d="M56 235H710" stroke="#4a5242" stroke-width="1"/>
+  <circle cx="1022" cy="95" r="30" fill="#222b23"/>
+  <g stroke="#a59160" fill="none" stroke-width="1.5" opacity=".75">
+    <path d="M893 237V125a78 78 0 0 1 156 0v112"/>
+    <path d="M908 237V125a63 63 0 0 1 126 0v112"/>
+    <path d="M880 237h184M887 245h170M881 253h181"/>
+    <path d="M890 125h22M1031 125h22M890 134h22M1031 134h22"/>
+    <path d="M1118 232c-24-38-27-80-15-120"/>
+    <path d="M1107 174c-20-2-29-13-32-26 17 1 28 11 32 26Z"/>
+    <path d="M1104 155c15-7 24-19 25-33-17 5-24 17-25 33Z"/>
+    <path d="M1112 201c-22-2-34-11-39-25 19-1 32 8 39 25Z"/>
+    <path d="M1113 211c17-7 27-19 29-34-18 4-27 17-29 34Z"/>
+  </g>
+</svg>
