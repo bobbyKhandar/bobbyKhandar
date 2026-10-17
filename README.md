@@ -44,9 +44,9 @@ Web tools, data pipelines, and AI experiments are some of the things you'll find
 ![Convex](https://img.shields.io/badge/Convex-343B30?style=flat)
 ![MongoDB](https://img.shields.io/badge/MongoDB-343B30?style=flat&logo=mongodb&logoColor=D8C7A0)
 ![Oracle Database](https://img.shields.io/badge/Oracle%20Database-343B30?style=flat&logo=oracle&logoColor=D8C7A0)
+![Shopify](https://img.shields.io/badge/Shopify-343B30?style=flat&logo=shopify&logoColor=D8C7A0)
 ![Telegram Bot API](https://img.shields.io/badge/Telegram%20Bot%20API-343B30?style=flat&logo=telegram&logoColor=D8C7A0)
 ![Vercel](https://img.shields.io/badge/Vercel-343B30?style=flat&logo=vercel&logoColor=D8C7A0)
-![Shopify](https://img.shields.io/badge/Shopify-343B30?style=flat&logo=shopify&logoColor=D8C7A0)
 
 **Application libraries**
 
