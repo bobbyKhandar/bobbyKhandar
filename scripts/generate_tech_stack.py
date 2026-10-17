@@ -59,6 +59,64 @@ PACKAGE_LOGOS = {
     "sqlalchemy": ("SQLAlchemy", "sqlalchemy", "D71F00"),
     "pytest": ("pytest", "pytest", "0A9EDC"),
     "pydantic": ("Pydantic", "pydantic", "E92063"),
+    "@aws-sdk/client-bedrock-runtime": ("AWS", "amazonaws", "232F3E"),
+    "@aws-sdk/client-s3": ("AWS", "amazonaws", "232F3E"),
+    "boto3": ("AWS", "amazonaws", "232F3E"),
+    "@google/generative-ai": ("Google AI", "google", "4285F4"),
+    "@clerk/nextjs": ("Clerk", "clerk", "6C47FF"),
+    "@radix-ui/react-alert-dialog": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-avatar": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-checkbox": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-dialog": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-dropdown-menu": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-label": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-progress": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-radio-group": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-scroll-area": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-select": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-separator": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-slot": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-switch": ("Radix UI", "radixui", "161618"),
+    "@radix-ui/react-tabs": ("Radix UI", "radixui", "161618"),
+    "@heroicons/react": ("Heroicons", "heroicons", "8B5CF6"),
+    "@tailwindcss/forms": ("Tailwind CSS", "tailwindcss", "06B6D4"),
+    "@vercel/postgres": ("Vercel", "vercel", "000000"),
+    "next-auth": ("Auth.js", "auth0", "000000"),
+    "lucide-react": ("Lucide", "lucide", "F56565"),
+    "recharts": ("Recharts", "", "22B5BF"),
+    "class-variance-authority": ("Class Variance Authority", "", "3B82F6"),
+    "clsx": ("clsx", "", "64748B"),
+    "zod": ("Zod", "", "3E67B1"),
+    "axios": ("Axios", "", "5A29E4"),
+    "python-telegram-bot": ("Telegram Bot API", "telegram", "26A5E4"),
+    "pyyaml": ("PyYAML", "", "CB171E"),
+    "langchain": ("LangChain", "", "1C3C3C"),
+    "langchain-community": ("LangChain", "", "1C3C3C"),
+    "langchain-qdrant": ("LangChain", "", "1C3C3C"),
+    "langchain-openai": ("LangChain", "", "1C3C3C"),
+    "langchain-text-splitters": ("LangChain", "", "1C3C3C"),
+    "qdrant-client": ("Qdrant", "", "DC244C"),
+    "openai": ("OpenAI", "openai", "412991"),
+    "pypdf": ("PyPDF", "", "B30B00"),
+    "pymupdf4llm": ("PyMuPDF", "", "4B5563"),
+    "sentence-transformers": ("Sentence Transformers", "huggingface", "FFD21E"),
+    "easyocr": ("EasyOCR", "", "2563EB"),
+    "flask-cors": ("Flask", "flask", "000000"),
+    "pdf2image": ("PDF2Image", "", "B30B00"),
+    "pillow": ("Pillow", "python", "3776AB"),
+    "redis": ("Redis", "redis", "FF4438"),
+    "lancedb": ("LanceDB", "", "6D28D9"),
+    "hdbscan": ("HDBSCAN", "", "2563EB"),
+    "pyarrow": ("Apache Arrow", "apachearrow", "CB333B"),
+    "python-dotenv": ("python-dotenv", "python", "3776AB"),
+    "pydantic-settings": ("Pydantic", "pydantic", "E92063"),
+    "requests": ("Requests", "", "2563EB"),
+    "dotenv": ("dotenv", "", "64748B"),
+    "json5": ("JSON5", "", "F7DF1E"),
+    "jszip": ("JSZip", "", "D97706"),
+    "tailwind-merge": ("Tailwind Merge", "tailwindcss", "06B6D4"),
+    "pdf-lib": ("PDF-lib", "", "B30B00"),
+    "zod-mongoose": ("Zod", "", "3E67B1"),
 }
 
 LANGUAGE_LOGOS = {
@@ -222,7 +280,8 @@ def collect(username: str, token: str | None) -> tuple[Counter, Counter]:
 
 def badge(label: str, logo: str, color: str) -> str:
     label = urllib.parse.quote(label, safe="")
-    url = f"https://img.shields.io/badge/{label}-{color}?style=for-the-badge&logo={urllib.parse.quote(logo)}&logoColor=white"
+    logo_suffix = f"&logo={urllib.parse.quote(logo)}&logoColor=white" if logo else ""
+    url = f"https://img.shields.io/badge/{label}-{color}?style=for-the-badge{logo_suffix}"
     return f"![{label}]({url})"
 
 
@@ -249,11 +308,25 @@ def render(languages: Counter, package_repos: Counter) -> str:
     selected_packages = [
         key for key, count in package_repos.most_common()
         if key in PACKAGE_LOGOS and count >= 1
-    ][:12]
+    ]
     for key in selected_packages:
         label, logo, color = PACKAGE_LOGOS[key]
         if label.casefold() not in seen:
             badges.append(badge(label, logo, color))
+            seen.add(label.casefold())
+
+    # Include other recurring direct dependencies as readable badges too. This
+    # avoids silently dropping useful packages just because we lack a logo slug.
+    excluded = {"typescript", "eslint", "prettier", "globals", "postcss", "autoprefixer"}
+    generic = [
+        (key, count) for key, count in package_repos.most_common()
+        if key not in PACKAGE_LOGOS and count >= 2
+        and not key.startswith("@types/") and key not in excluded
+    ][:20]
+    for key, _count in generic:
+        label = key.rsplit("/", 1)[-1].replace("-", " ").replace("_", " ").title()
+        if label.casefold() not in seen:
+            badges.append(badge(label, "", "64748B"))
             seen.add(label.casefold())
     return "\n".join(badges)
 
